@@ -2,18 +2,19 @@
 const MUSCLES={
  'press-pecho':[['chest','triceps','shoulders'],'Pectoral mayor · tríceps · deltoides anterior'],
  peck:[['chest'],'Pectoral mayor'],
- militar:[['shoulders','triceps'],'Deltoides · tríceps'],
+ 'militar-mancuernas':[['shoulders','triceps'],'Deltoides · tríceps'],
  laterales:[['shoulders'],'Deltoides lateral'],
  'extension-triceps':[['triceps'],'Tríceps'],
  dominadas:[['back','biceps'],'Dorsal ancho · bíceps · espalda media'],
  jalon:[['back','biceps'],'Dorsal ancho · bíceps'],
+ 'remo-polea-abierto':[['back','biceps','shoulders'],'Espalda media · dorsal ancho · deltoides posterior · bíceps'],
  'remo-unilateral':[['back','biceps'],'Dorsal ancho · romboides · bíceps'],
  'inclinado-curl':[['biceps'],'Bíceps braquial'],
  hack:[['quads','glutes'],'Cuádriceps · glúteos'],
  'leg-extension':[['quads'],'Cuádriceps'],
  'leg-curl':[['hamstrings'],'Isquiotibiales'],
  aductores:[['adductors'],'Aductores de cadera'],
- predicador:[['biceps'],'Bíceps braquial'],
+ 'predicador-unilateral':[['biceps'],'Bíceps braquial'],
  'triceps-v':[['triceps'],'Tríceps']
 };
 function muscleCard(id){
@@ -24,3 +25,7 @@ function muscleCard(id){
  const back=path('back','M37 42L50 36L63 42L62 67L55 82L45 82L38 67Z')+path('shoulders','M29 42L36 40L35 56L25 59Z M64 40L71 42L75 59L65 56Z')+path('triceps','M25 61L33 59L29 78L22 77Z M67 59L75 61L78 77L71 78Z')+path('glutes','M38 86L49 88L49 104L35 102Z M51 88L62 86L65 102L51 104Z')+path('hamstrings','M36 106L47 107L45 134L37 134Z M53 107L64 106L63 134L55 134Z');
  return `<div class="muscle-card"><svg viewBox="0 0 204 192" role="img" aria-label="Músculos principales: ${names}"><title>${names}</title><g>${body}${front}</g><g transform="translate(104 0)">${body}${back}</g><text x="50" y="186" text-anchor="middle" fill="#aaa18d" font-size="9">FRENTE</text><text x="154" y="186" text-anchor="middle" fill="#aaa18d" font-size="9">ESPALDA</text></svg><div><strong>Músculos trabajados</strong><p>${names}</p><small>Dorado: grupos principales · Esquema orientativo</small></div></div>`;
 }
+
+// Historical session snapshots retain their original exercise IDs.
+MUSCLES.militar=MUSCLES["militar-mancuernas"];
+MUSCLES.predicador=MUSCLES["predicador-unilateral"];

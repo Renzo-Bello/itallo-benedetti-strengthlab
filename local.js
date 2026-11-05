@@ -4,7 +4,15 @@
  const blank=()=>({version:1,athlete:'itallo-benedetti',sessions:{},programStart:''});
  let initial=blank(),readError=false;
  try {const raw=localStorage.getItem(key);if(raw){initial=JSON.parse(raw);if(initial?.athlete!=='itallo-benedetti'||initial.version!==1||!initial.sessions||Array.isArray(initial.sessions))throw Error('Formato inválido');}} catch {initial=blank();readError=true;}
+ const now=new Date(),localToday=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+ initial.programStart ||= Object.values(initial.sessions).filter(Plan.hasRecord).map(s=>s.date).sort()[0]||localToday;
+ if(initial.routineRevision!==2){
+  if(initial.coachPlan){initial.previousCoachPlan=initial.coachPlan;try{initial.coachPlan=Plan.upgrade(initial.coachPlan);}catch{delete initial.coachPlan;}}
+  initial.routineRevision=2;window.planLoadMessage='Rutina actualizada: RIR de semana 1 y nuevos ejercicios. Tus sesiones registradas se conservan.';
+ }
  try{if(initial.coachPlan)Plan.apply(initial.coachPlan);}catch{window.planLoadMessage='No se pudo recuperar la pauta. Puedes volver a importarla.';}
+ Plan.refreshEmptySessions(initial);
+ try{localStorage.setItem(key,JSON.stringify(initial));}catch{}
  const planHash=new URLSearchParams(location.hash.slice(1)).get('plan');
  if(planHash&&initial.lastPlanLink!==planHash){try{const clean=Plan.decode(planHash);Plan.apply(clean);initial.coachPlan=clean;initial.lastPlanLink=planHash;Plan.refreshEmptySessions(initial);localStorage.setItem(key,JSON.stringify(initial));window.planLoadMessage='Pauta de RIR y videos recibida. Las sesiones anteriores se conservan.';}catch{window.planLoadMessage='No se pudo aplicar el enlace de pauta. Pide un enlace nuevo a Renzo.';}}
  window.initialState=initial;
