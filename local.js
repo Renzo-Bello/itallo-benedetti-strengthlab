@@ -23,7 +23,5 @@
   applyRole(){},
   validateDay(plan){if(!plan||typeof plan.name!=='string'||typeof plan.subtitle!=='string'||!Array.isArray(plan.exercises)||plan.exercises.length>40)throw Error('Plan inválido');for(const ex of plan.exercises){if(ex?.targetRir!==undefined&&(!Array.isArray(ex.targetRir)||ex.targetRir.length!==ex.blocks?.reduce((n,b)=>n+b.sets,0)||ex.targetRir.some(r=>!Plan.RIR.includes(r))))throw Error('RIR pautado inválido');if(ex?.video!==undefined&&(typeof ex.video!=='string'||(ex.video&&!Plan.safeVideo(ex.video))))throw Error('Video inválido');if(!ex||typeof ex.name!=='string'||!/^[-a-z0-9]+$/.test(ex.id)||typeof ex.note!=='string'||(ex.image!==''&&!/^assets\/[-a-z0-9]+\.(jpg|png|webp)$/.test(ex.image))||typeof ex.body!=='boolean'||!Array.isArray(ex.blocks)||ex.blocks.length>10)throw Error('Ejercicio inválido');for(const b of ex.blocks)if(!b||!['Main','Top set','Back off'].includes(b.type)||!Number.isInteger(b.sets)||b.sets<1||b.sets>20||typeof b.reps!=='string'||b.reps.length>80)throw Error('Series inválidas');}}
  };
- document.getElementById('show-guide').onclick=()=>document.getElementById('onboarding').showModal();
- document.getElementById('start-training').onclick=()=>document.getElementById('onboarding').close();
  window.addEventListener('DOMContentLoaded',()=>{if(readError)status('No se pudo recuperar el registro local. Importa una copia desde Progreso.');});
 })();
