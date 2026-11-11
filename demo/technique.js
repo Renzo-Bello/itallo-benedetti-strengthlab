@@ -1,0 +1,2 @@
+const EXERCISE_TECHNIQUE = {};
+
