@@ -5,7 +5,7 @@
  let initial=blank(),readError=false;
  try {const raw=localStorage.getItem(key);if(raw){initial=JSON.parse(raw);if(initial?.athlete!=='itallo-benedetti'||initial.version!==1||!initial.sessions||Array.isArray(initial.sessions))throw Error('Formato inválido');}} catch {initial=blank();readError=true;}
  const now=new Date(),localToday=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
- initial.programStart ||= Object.values(initial.sessions).filter(Plan.hasRecord).map(s=>s.date).sort()[0]||localToday;
+ initial.programStart ||= Object.values(initial.sessions).filter(Plan.hasRecord).map(s=>s.date).sort()[0]||'2026-11-09';
  if(initial.routineRevision!==2){
   if(initial.coachPlan){initial.previousCoachPlan=initial.coachPlan;try{initial.coachPlan=Plan.upgrade(initial.coachPlan);}catch{delete initial.coachPlan;}}
   initial.routineRevision=2;window.planLoadMessage='Rutina actualizada: RIR de semana 1 y nuevos ejercicios. Tus sesiones registradas se conservan.';

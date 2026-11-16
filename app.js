@@ -22,7 +22,7 @@ function exerciseImage(ex){return ROUTINE.flatMap(d=>d.exercises).find(e=>e.id==
 function rirOptions(value=''){return Plan.RIR.map(r=>`<option value="${r}" ${r===String(value)?'selected':''}>${r||'—'}</option>`).join('');}
 function render(){
  Plan.refreshEmptySessions(state);
- $('date').value=date;$('date').max=today();
+ $('date').value=date;$('date').removeAttribute('max');
  $('days').innerHTML=ROUTINE.map((d,i)=>`<button class="day ${i===day?'active':''}" aria-pressed="${i===day}" data-day="${i}"><small>DÍA 0${i+1}</small><strong>${escapeHTML(d.name)}</strong></button>`).join('');
  $('days').querySelectorAll('button').forEach(b=>b.onclick=()=>{day=Number(b.dataset.day);render();});
  $('day-title').textContent=`Día ${day+1} · ${dayPlan().name}`;$('day-description').textContent=dayPlan().subtitle;
@@ -46,7 +46,7 @@ function render(){
   v.done=!v.done;session().entries[ex.id][i]=v;session().finished=false;persist();updateRow(ex.id,i,v);updateCompletion();
  });
  $('exercises').querySelectorAll('[data-photo]').forEach(b=>b.onclick=()=>{const ex=dayPlan().exercises.find(e=>e.id===b.dataset.photo);const image=exerciseImage(ex);$('photo').querySelector('img').hidden=!image;if(image)$('photo').querySelector('img').src=image;$('photo').querySelector('img').alt=ex.name;$('photo-title').textContent=ex.name;$('photo-muscles').innerHTML=muscleCard(ex.id);$('photo-caption').textContent=(image?'Imagen de referencia · Generada con IA':'STRENGTHLAB · EJERCICIO');const tips=EXERCISE_TECHNIQUE[ex.id]||['Realiza cada repetición con control, manteniendo una postura estable.','Sigue las indicaciones de Renzo para este ejercicio.'];$('photo-technique').innerHTML=tips.map(t=>'<li>'+escapeHTML(t)+'</li>').join('');$('photo-coach-note').textContent=ex.note||'';$('photo-coach-note').hidden=!ex.note;const video=Plan.safeVideo(ex.video||'');let link=$('photo-video');if(!link){link=document.createElement('a');link.id='photo-video';link.className='quiet exercise-video';link.target='_blank';link.rel='noopener noreferrer';$('photo').appendChild(link);}link.hidden=!video;link.textContent='Ver video referencial ↗';if(video)link.href=video;$('photo').showModal();});
- $('cardio-done').checked=session().cardioDone===true;$('cardio-skipped').checked=session().cardioSkipped===true;updateCompletion();window.Cloud.applyRole();if(typeof updatePeriodCaption==='function')updatePeriodCaption();if(!storageReady)$('save-status').textContent='Almacenamiento no disponible. Descarga una copia desde Progreso antes de salir.';
+ $('cardio-done').checked=session().cardioDone===true;$('cardio-skipped').checked=session().cardioSkipped===true;updateCompletion();window.Cloud.applyRole();if(typeof updatePeriodCaption==='function')updatePeriodCaption();if(typeof renderTrainingWeeks==='function')renderTrainingWeeks();if(!storageReady)$('save-status').textContent='Almacenamiento no disponible. Descarga una copia desde Progreso antes de salir.';
 }
 function updateRow(id,i,v){const row=document.querySelector(`[data-row="${id}-${i}"]`);row.classList.toggle('completed',v.done);const b=row.querySelector('button');b.setAttribute('aria-pressed',v.done);b.textContent=v.done?'✓':'○';}
 function updateCompletion(){const s=session(),n=completedCount(s),t=dayPlan().exercises.reduce((n,e)=>n+setsFor(e).length,0);$('completion').textContent=`${n} / ${t} SERIES`;$('meter').style.width=(n/t*100)+'%';$('finish').disabled=n!==t||(s.cardioRequired&&!s.cardioDone&&!s.cardioSkipped)||s.finished;$('finish').textContent=s.finished?'Sesión completada ✓':'Finalizar sesión ↗';}
